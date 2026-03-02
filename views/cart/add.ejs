@@ -1,0 +1,25 @@
+<h1>Añadir al carrito</h1>
+
+<p><strong><%= game.name %></strong> — <%= game.price.toFixed(2) %> €</p>
+
+<% if (game.stock === 0) { %>
+  <p><span class="badge badge--out">Sin stock</span></p>
+<% } else { %>
+  <p><span class="badge">Disponible</span></p>
+<% } %>
+
+<% if (isAdmin) { %>
+  <p class="muted">Stock: <%= game.stock %></p>
+<% } %>
+
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
+<form method="POST" action="/carrito/add/<%= game.id %>">
+  <label>Cantidad</label><br/>
+  <input class="input" type="number" name="qty" min="1" step="1" value="<%= values.qty %>" <%= game.stock === 0 ? 'disabled' : '' %> /><br/><br/>
+
+  <button class="btn" type="submit" <%= game.stock === 0 ? 'disabled' : '' %>>Añadir</button>
+  <a class="btn btn--ghost" href="/">Cancelar</a>
+</form>

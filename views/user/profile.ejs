@@ -1,0 +1,19 @@
+<h1>Perfil</h1>
+
+<% if (error) { %><p style="color:red;"><%= error %></p><% } %>
+<% if (success) { %><p style="color:green;"><%= success %></p><% } %>
+
+<form method="POST" action="/perfil">
+  <label>Usuario</label><br/>
+  <input class="input" value="<%= values.username %>" disabled /><br/><br/>
+
+  <label>Nombre</label><br/>
+  <input class="input" name="name" value="<%= values.name %>" /><br/><br/>
+
+  <label>Email</label><br/>
+  <input class="input" name="email" value="<%= values.email %>" /><br/><br/>
+
+  <button class="btn" type="submit">Guardar</button>
+</form>
+
+<p><a class="btn btn--ghost" href="/changepassword">Cambiar contraseña</a></p>

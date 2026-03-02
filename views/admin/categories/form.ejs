@@ -1,0 +1,13 @@
+<h1><%= title %></h1>
+
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
+<form method="POST" action="<%= action %>">
+  <label>Nombre</label><br/>
+  <input class="input" name="name" value="<%= values.name || '' %>" /><br/><br/>
+
+  <button class="btn" type="submit"><%= submitText %></button>
+  <a class="btn btn--ghost" href="/admin/categorias">Cancelar</a>
+</form>

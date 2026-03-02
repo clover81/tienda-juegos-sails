@@ -1,0 +1,35 @@
+<h1>Finalizar compra</h1>
+
+<% if (error) { %>
+  <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<div class="table-wrap">
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Juego</th>
+        <th>Cantidad</th>
+        <th>Precio</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% items.forEach(it => { %>
+        <tr>
+          <td><%= it.game.name %></td>
+          <td><%= it.qty %></td>
+          <td><%= it.game.price.toFixed(2) %> €</td>
+          <td><%= it.lineTotal.toFixed(2) %> €</td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<p><strong>Total compra:</strong> <%= total.toFixed(2) %> €</p>
+
+<form method="POST" action="/carrito/checkout">
+  <button class="btn" type="submit">Confirmar compra</button>
+  <a class="btn btn--ghost" href="/carrito">Volver</a>
+</form>

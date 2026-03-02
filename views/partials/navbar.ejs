@@ -1,0 +1,50 @@
+<header>
+  <div class="navbar">
+    <a class="brand" href="/" aria-label="Inicio">
+      <img class="brand-mark" src="/images/meeplemania.svg" alt="MeepleManía">
+    </a>
+
+    <nav class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/categorias">Categorías</a>
+      <a href="/acerca">Acerca</a>
+
+      <% if (isLoggedIn) { %>
+        <a href="/carrito">
+          Carrito<% if (cartCount && cartCount > 0) { %> (<%= cartCount %>)<% } %>
+        </a>
+
+        <a href="/perfil">Perfil</a>
+
+        <!-- Usuario -->
+<span class="nav-user">
+  Hola, <strong><%= currentUserName || currentUsername || 'usuario' %></strong>
+  <% if (isAdmin) { %>
+    <span class="nav-user__badge">Admin</span>
+  <% } %>
+</span>
+
+<% if (isAdmin) { %>
+  <div class="nav-dropdown">
+    <button class="nav-dropdown__btn" type="button" aria-haspopup="true">
+      Admin ▾
+    </button>
+    <div class="nav-dropdown__menu" role="menu">
+      <a href="/admin/juegos" class="nav-dropdown__item">Juegos</a>
+      <a href="/admin/categorias" class="nav-dropdown__item">Categorías</a>
+    </div>
+  </div>
+<% } %>
+        <a href="/logout">Salir</a>
+      <% } else { %>
+        <a href="/login">Login</a>
+        <a href="/registro">Registro</a>
+      <% } %>
+
+      <!-- Toggle tema -->
+      <button class="theme-toggle" type="button" aria-label="Cambiar tema" title="Cambiar tema">
+        <span class="theme-icon" aria-hidden="true">🌙</span>
+      </button>
+    </nav>
+  </div>
+</header>

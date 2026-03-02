@@ -1,0 +1,53 @@
+<div class="container product-detail">
+
+  <div class="product-detail__grid">
+
+    <!-- Imagen -->
+<div class="product-detail__image">
+  <% if (game.image) { %>
+    <%
+      let img = String(game.image);
+      if (img.startsWith('/')) img = img.slice(1);        // quita "/" inicial
+      if (!img.startsWith('uploads/')) img = 'uploads/' + img; // asegura carpeta
+    %>
+    <img src="/<%= img %>" alt="<%= game.name %>">
+  <% } else { %>
+    <div class="img-placeholder">Sin imagen</div>
+  <% } %>
+</div>
+
+    <!-- Información -->
+    <div class="product-detail__info">
+      <h1><%= game.name %></h1>
+
+      <p class="price"><%= game.price.toFixed(2) %> €</p>
+
+      <p class="meta">
+        <span class="badge"><%= game.category?.name || 'Sin categoría' %></span>
+        <span class="badge">IVA: <%= game.vat %>%</span>
+
+        <% if (game.stock === 0) { %>
+          <span class="badge badge--out">Sin stock</span>
+        <% } %>
+      </p>
+
+      <p class="description">
+        <%= game.description || 'Sin descripción.' %>
+      </p>
+
+      <div class="actions">
+        <% if (isLoggedIn && game.stock > 0) { %>
+          <a class="btn" href="/carrito/add/<%= game.id %>">Añadir al carrito</a>
+        <% } else if (!isLoggedIn) { %>
+          <a class="btn" href="/login">Inicia sesión para comprar</a>
+        <% } else { %>
+          <span class="btn btn--disabled">Sin stock</span>
+        <% } %>
+
+        <a class="btn btn--ghost" href="/">Volver</a>
+      </div>
+    </div>
+
+  </div>
+
+</div>

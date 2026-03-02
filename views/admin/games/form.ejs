@@ -1,0 +1,43 @@
+<h1><%= title %></h1>
+
+<% if (error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
+<form method="POST" action="<%= action %>" enctype="multipart/form-data">
+  <label>Nombre</label><br/>
+  <input class="input" name="name" value="<%= game ? (game.name || '') : '' %>" /><br/><br/>
+
+  <label>Categoría</label><br/>
+  <select class="input" name="category">
+    <option value="">-- Selecciona --</option>
+    <% categories.forEach(c => { %>
+      <option value="<%= c.id %>" <%= (game && String(game.category) === String(c.id)) ? 'selected' : '' %>>
+        <%= c.name %>
+      </option>
+    <% }) %>
+  </select><br/><br/>
+
+  <label>Precio</label><br/>
+  <input class="input" name="price" type="number" step="0.01" value="<%= game ? (game.price ?? '') : '' %>" /><br/><br/>
+
+  <label>IVA (%)</label><br/>
+  <input class="input" name="vat" type="number" step="1" value="<%= game ? (game.vat ?? 21) : 21 %>" /><br/><br/>
+
+  <label>Stock</label><br/>
+  <input class="input" name="stock" type="number" step="1" value="<%= game ? (game.stock ?? 0) : 0 %>" /><br/><br/>
+
+  <label>Descripción</label><br/>
+  <textarea class="input" name="description" rows="6"><%= game && game.description ? game.description : '' %></textarea><br/><br/>
+
+  <% if (game && game.image) { %>
+    <p>Imagen actual:</p>
+    <img src="/uploads/<%= game.image %>" alt="img" style="height:80px;" /><br/><br/>
+  <% } %>
+
+  <label>Subir imagen (opcional)</label><br/>
+  <input class="input" type="file" name="photo" accept="image/*" /><br/><br/>
+
+  <button class="btn" type="submit"><%= submitText %></button>
+  <a class="btn btn--ghost" href="/admin/juegos">Cancelar</a>
+</form>

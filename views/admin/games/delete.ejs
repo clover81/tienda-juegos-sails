@@ -1,0 +1,12 @@
+<h1>Borrar juego</h1>
+
+<p>¿Seguro que quieres borrar: <strong><%= game.name %></strong>?</p>
+
+<% if (game.image) { %>
+  <img src="/uploads/<%= game.image %>" alt="img" style="height:80px;" />
+<% } %>
+
+<form method="POST" action="/admin/juegos/<%= game.id %>/delete">
+  <button class="btn btn--danger" type="submit">Sí, borrar</button>
+  <a class="btn btn--ghost" href="/admin/juegos">Cancelar</a>
+</form>

@@ -1,0 +1,40 @@
+<h1>Admin - Juegos</h1>
+
+<p><a class="btn" href="/admin/juegos/new">+ Nuevo juego</a>
+<a class="btn" href="/admin/categorias/new">+ Nueva categoría</a>
+</p>
+<div class="table-wrap">
+<table class="table">
+  <thead>
+    <tr>
+      <th>Imagen</th>
+      <th>Nombre</th>
+      <th>Categoría</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% games.forEach(g => { %>
+      <tr>
+        <td>
+          <% if (g.image) { %>
+            <img class="table-thumb" src="/uploads/<%= g.image %>?v=<%= Date.now() %>" alt="img">
+          <% } else { %>
+            -
+          <% } %>
+        </td>
+        <td><%= g.name %></td>
+        <td><%= g.category ? g.category.name : '-' %></td>
+        <td><%= g.price.toFixed(2) %> €</td>
+        <td><%= g.stock %></td>
+        <td>
+          <a class="btn btn--small" href="/admin/juegos/<%= g.id %>/edit">Editar</a>
+          <a class="btn btn--small btn--danger" href="/admin/juegos/<%= g.id %>/delete">Borrar</a>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
+</div>

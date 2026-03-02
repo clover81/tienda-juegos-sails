@@ -1,0 +1,92 @@
+<div class="hero-pro">
+  <div class="hero-bg"></div>
+
+  <div class="hero-content">
+
+    <h1 class="hero-title">Tu tienda online de juegos de mesa</h1>
+    <p class="hero-subtitle">Estrategia, diversión y aventuras en cada partida.</p>
+
+    <div class="hero-actions">
+      <a class="btn btn-hero" href="#games">Explorar juegos</a>
+      <a class="btn btn--ghost btn-hero" href="/categorias">Ver categorías</a>
+    </div>
+
+    <% if (isAdmin) { %>
+      <p class="hero-admin"><%= totalGames %> juegos disponibles</p>
+    <% } %>
+  </div>
+</div>
+
+<h2>Categorías</h2>
+<div class="categories">
+  <a href="/" class="category-pill <%= !selectedCategoryId ? 'active' : '' %>">Todas</a>
+  <% categories.forEach(c => { %>
+    <a href="/categoria/<%= c.id %>"
+       class="category-pill <%= String(c.id) === String(selectedCategoryId) ? 'active' : '' %>">
+      <%= c.name %>
+    </a>
+  <% }) %>
+</div>
+
+<h2 id="games">Juegos</h2>
+
+
+<% if (games.length === 0) { %>
+  <p>No hay juegos en esta categoría.</p>
+<% } %>
+
+<div class="game-grid">
+  <% games.forEach(g => { %>
+    <div class="card card-product">
+
+      <a class="card-media" href="/juegos/<%= g.id %>">
+        <% if (g.image) { %>
+          <img class="card-img" src="/uploads/<%= g.image %>?v=<%= Date.now() %>" alt="Imagen">
+        <% } else { %>
+          <div class="card-img card-img--placeholder">Sin imagen</div>
+        <% } %>
+      </a>
+
+      <div class="card-body">
+        <h3 class="card-title">
+          <a href="/juegos/<%= g.id %>"><%= g.name %></a>
+        </h3>
+
+        <p class="card-price"><%= g.price.toFixed(2) %> €</p>
+
+        <p class="card-meta">
+          <span class="badge"><%= g.category ? g.category.name : 'Sin categoría' %></span>
+
+          <% if (g.stock === 0) { %>
+            <span class="badge badge--out">Sin stock</span>
+          <% } %>
+
+          <% if (isAdmin) { %>
+            <span class="muted">Stock: <%= g.stock %></span>
+          <% } %>
+        </p>
+
+        <p class="card-desc">
+          <%= g.description
+              ? (g.description.length > 120 ? g.description.slice(0, 120) + '…' : g.description)
+              : 'Sin descripción.' %>
+        </p>
+
+        <div class="card-actions">
+          <a class="btn btn--ghost" href="/juegos/<%= g.id %>">Ver detalle</a>
+
+          <% if (isLoggedIn) { %>
+            <% if (g.stock > 0) { %>
+              <a class="btn" href="/carrito/add/<%= g.id %>">Añadir</a>
+            <% } else { %>
+              <span class="btn btn--disabled" aria-disabled="true">Sin stock</span>
+            <% } %>
+          <% } else { %>
+            <a class="btn" href="/login">Login para comprar</a>
+          <% } %>
+        </div>
+      </div>
+
+    </div>
+  <% }) %>
+</div>

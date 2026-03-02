@@ -1,0 +1,16 @@
+<h1>Borrar categoría</h1>
+
+<% if (typeof error !== 'undefined' && error) { %>
+  <p style="color:red;"><%= error %></p>
+<% } %>
+
+<p>¿Seguro que quieres borrar la categoría: <strong><%= category.name %></strong>?</p>
+
+<% if (category.games && category.games.length > 0) { %>
+  <p>Juegos asociados: <%= category.games.length %> (no se podrá borrar)</p>
+<% } %>
+
+<form method="POST" action="/admin/categorias/<%= category.id %>/delete">
+  <button class="btn btn--danger" type="submit">Sí, borrar</button>
+  <a class="btn btn--ghost" href="/admin/categorias">Cancelar</a>
+</form>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title><%= typeof title !== 'undefined' ? title : 'MeepleManía tu tienda de juegos de mesa' %></title>
+  <link rel="stylesheet" href="/styles/main.css" />
+  <link rel="icon" type="image/svg+xml" href="/images/meeple-icon.svg">
+  <link rel="alternate icon" href="/images/meeple-icon.svg">
+
+</head>
+<body>
+  <%- include('../partials/navbar') %>
+
+  <main class="container page">
+    <%- body %>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <small>Proyecto DAW · Sails.js (MVC) · Tienda de juegos de mesa</small>
+    </div>
+  </footer>
+</body>
+<script>
+  (function () {
+    const root = document.documentElement;
+    const stored = localStorage.getItem('theme');
+    if (stored === 'dark') root.setAttribute('data-theme', 'dark');
+
+    const btn = document.querySelector('.theme-toggle');
+    const icon = document.querySelector('.theme-icon');
+
+    function syncIcon() {
+      const isDark = root.getAttribute('data-theme') === 'dark';
+      if (icon) icon.textContent = isDark ? '☀️' : '🌙';
+    }
+    syncIcon();
+
+    if (btn) {
+      btn.addEventListener('click', function () {
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          root.removeAttribute('data-theme');
+          localStorage.setItem('theme', 'light');
+        } else {
+          root.setAttribute('data-theme', 'dark');
+          localStorage.setItem('theme', 'dark');
+        }
+        syncIcon();
+      });
+    }
+  })();
+</script>
+
+</html>

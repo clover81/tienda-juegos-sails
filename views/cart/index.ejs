@@ -1,0 +1,48 @@
+<h1>Carrito</h1>
+
+<% if (items.length === 0) { %>
+  <p>Tu carrito está vacío.</p>
+  <p><a class="btn" href="/">Volver a la tienda</a></p>
+<% } else { %>
+
+  <div class="table-wrap">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Juego</th>
+          <th>Cantidad</th>
+          <th>Precio</th>
+          <th>Total línea</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% items.forEach(it => { %>
+          <tr>
+            <td><%= it.game.name %></td>
+            <td><%= it.qty %></td>
+            <td><%= it.game.price.toFixed(2) %> €</td>
+            <td><%= it.lineTotal.toFixed(2) %> €</td>
+            <td>
+              <form method="POST" action="/carrito/remove/<%= it.game.id %>" style="display:inline;">
+                <button class="btn btn--small btn--danger" type="submit">Quitar</button>
+              </form>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </div>
+
+  <p><strong>Total: <%= total.toFixed(2) %> €</strong></p>
+
+  <p>
+    <a class="btn" href="/carrito/checkout">Finalizar compra</a>
+  </p>
+
+  <form method="POST" action="/carrito/clear">
+    <button class="btn btn--ghost" type="submit">Vaciar carrito</button>
+  </form>
+
+  <p><a class="btn"href="/">Seguir comprando</a></p>
+<% } %>
