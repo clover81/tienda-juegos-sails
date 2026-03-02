@@ -159,5 +159,5 @@ Servicio persistente con systemd
 
 ## Autor
 
-Alejandro
-Proyecto académico para Desarrollo Web en Entorno Servidor — Desarrollo de Aplicaciones Web (DAW)
+- Alejandro
+- Proyecto académico para Desarrollo Web en Entorno Servidor — Desarrollo de Aplicaciones Web (DAW)
