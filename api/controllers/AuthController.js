@@ -73,7 +73,7 @@ module.exports = {
     return res.view('auth/register');
   },
 
-  register: async function (req, res) {
+    register: async function (req, res) {
     const { username, email, name, password } = req.body;
 
     const fieldErrors = {};
@@ -94,43 +94,70 @@ module.exports = {
       });
     }
 
-    // Comprobar duplicados
-    const existingUser = await User.findOne({
-      or: [
-        { username },
-        { email }
-      ]
-    });
-
-    if (existingUser) {
-      return res.view('auth/register', {
-        error: 'Usuario o email ya registrado.',
-        fieldErrors: {
-          username: 'Ya existe un usuario con ese nombre.',
-          email: 'Ese email ya está en uso.'
-        },
-        values
+    try {
+      // Comprobar duplicados
+      const existingUser = await User.findOne({
+        or: [
+          { username },
+          { email }
+        ]
       });
+
+      if (existingUser) {
+        return res.view('auth/register', {
+          error: 'Usuario o email ya registrado.',
+          fieldErrors: {
+            username: 'Ya existe un usuario con ese nombre.',
+            email: 'Ese email ya está en uso.'
+          },
+          values
+        });
+      }
+
+      // Hash password
+      const passwordHash = await bcrypt.hash(password, 10);
+
+      // Crear usuario
+      const createdUser = await User.create({
+        username,
+        email,
+        name,
+        passwordHash,
+        isAdmin: false
+      }).fetch();
+
+      // Auto-login
+      req.session.userId = createdUser.id;
+      req.session.userName = createdUser.name;
+      req.session.userUsername = createdUser.username;
+      req.session.isAdmin = !!createdUser.isAdmin;
+
+      return res.redirect('/');
+    } catch (err) {
+
+      // email inválido
+      if (err.code === 'E_INVALID_NEW_RECORD') {
+        let msg = 'Datos inválidos.';
+
+        if (err.invalidAttributes) {
+          if (err.invalidAttributes.email) {
+            fieldErrors.email = 'Email no válido. Ej: usuario@dominio.com';
+          }
+          if (err.invalidAttributes.username) {
+            fieldErrors.username = 'Nombre de usuario no válido.';
+          }
+        }
+
+        return res.view('auth/register', {
+          error: msg,
+          fieldErrors,
+          values
+        });
+      }
+
+      // Otros errores inesperados
+      sails.log.error(err);
+      return res.serverError();
     }
-
-    // Hash password
-    const passwordHash = await bcrypt.hash(password, 10);
-
-    // Crear usuario y obtenerlo
-    const createdUser = await User.create({
-      username,
-      email,
-      name,
-      passwordHash,
-      isAdmin: false
-    }).fetch();
-
-    // Auto-login
-    req.session.userId = createdUser.id;
-    req.session.userName = createdUser.name;
-    req.session.userUsername = createdUser.username;
-    req.session.isAdmin = !!createdUser.isAdmin;
-
-    return res.redirect('/');
   }
 };
