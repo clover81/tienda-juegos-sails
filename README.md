@@ -1,26 +1,163 @@
-# tienda-juegos-mesa
+# Tienda Online de Juegos de Mesa
 
-a [Sails v1](https://sailsjs.com) application
+Aplicación web desarrollada con **Sails.js** y **MySQL** que permite gestionar un catálogo de juegos de mesa, con funcionalidades de usuario, carrito y panel de administración.
+
+## Despliegue en producción
+
+La aplicación está desplegada en una máquina virtual Ubuntu dentro de OpenStack y es accesible públicamente.
+
+URL: http://172.16.11.195
+
+---
+
+## Tecnologías utilizadas
+
+- **Backend:** Sails.js (Node.js)
+- **Frontend:** EJS + CSS
+- **Base de datos:** MySQL 8
+- **Servidor web:** Nginx (proxy inverso)
+- **Infraestructura:** OpenStack (Ubuntu Server)
+- **Gestión de procesos:** systemd
+- **Control de versiones:** Git + GitHub
+
+---
+
+## Funciones principales
+
+### Usuarios
+- Registro e inicio de sesión
+- Gestión de sesión
+- Diferenciación de roles (usuario / admin)
+
+### Catálogo
+- Listado de juegos
+- Filtro por categorías
+- Vista detallada de producto
+
+### Carrito
+- Añadir productos
+- Persistencia mediante cookies
+- Contador dinámico
+
+### Administración (Admin)
+- CRUD de juegos
+- Gestión de stock
+- Edición de descripciones e imágenes
+
+---
+
+## Arquitectura del sistema
 
 
-### Links
-
-+ [Sails framework documentation](https://sailsjs.com/get-started)
-+ [Version notes / upgrading](https://sailsjs.com/documentation/upgrading)
-+ [Deployment tips](https://sailsjs.com/documentation/concepts/deployment)
-+ [Community support options](https://sailsjs.com/support)
-+ [Professional / enterprise options](https://sailsjs.com/enterprise)
+Usuario → Nginx → Node.js (Sails) → MySQL
 
 
-### Version info
+- **Nginx** actúa como proxy inverso.
+- **Sails.js** gestiona la lógica de negocio.
+- **MySQL** almacena los datos.
 
-This app was originally generated on Mon Feb 16 2026 08:21:01 GMT+0100 (hora estándar de Europa central) using Sails v1.5.16.
+---
 
-<!-- Internally, Sails used [`sails-generate@2.0.13`](https://github.com/balderdashy/sails-generate/tree/v2.0.13/lib/core-generators/new). -->
+## Instalación en local
 
+### Clonar repositorio
 
+```bash
+git clone https://github.com/clover81/tienda-juegos-sails.git
+cd tienda-juegos-sails
+```
+## Instalar dependencias
+`npm install`
 
-<!--
-Note:  Generators are usually run using the globally-installed `sails` CLI (command-line interface).  This CLI version is _environment-specific_ rather than app-specific, thus over time, as a project's dependencies are upgraded or the project is worked on by different developers on different computers using different versions of Node.js, the Sails dependency in its package.json file may differ from the globally-installed Sails CLI release it was originally generated with.  (Be sure to always check out the relevant [upgrading guides](https://sailsjs.com/upgrading) before upgrading the version of Sails used by your app.  If you're stuck, [get help here](https://sailsjs.com/support).)
--->
+## Configurar base de datos
 
+Crear base de datos:
+
+CREATE DATABASE tienda_mesa;
+
+Configurar conexión en config/datastores.js:
+
+url: 'mysql://usuario:password@localhost:3306/tienda_mesa'
+
+## Ejecutar la aplicación
+sails lift
+
+## Despliegue en servidor (OpenStack)
+Preparación del servidor
+sudo apt update && sudo apt install nginx mysql-server git -y
+Clonar proyecto
+cd /var/www
+git clone https://github.com/clover81/tienda-juegos-sails.git
+cd tienda
+npm install --production
+
+Configurar servicio systemd
+
+Archivo: /etc/systemd/system/tienda.service
+```bash
+[Unit]
+Description=Tienda Sails
+After=network.target mysql.service
+
+[Service]
+User=ubuntu
+WorkingDirectory=/var/www/tienda
+Environment=NODE_ENV=production
+ExecStart=/ruta/a/node app.js
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+```
+Activar servicio:
+
+sudo systemctl daemon-reload
+sudo systemctl enable tienda
+sudo systemctl start tienda
+Configuración de Nginx
+
+Archivo: /etc/nginx/sites-available/tienda
+```bash
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        proxy_pass http://localhost:1337;
+        proxy_set_header Host $host;
+    }
+}
+```
+Activar:
+
+sudo ln -s /etc/nginx/sites-available/tienda /etc/nginx/sites-enabled/
+sudo systemctl restart nginx
+
+## Actualización del despliegue
+cd /var/www/tienda
+git pull
+npm install --production   # si cambian dependencias
+sudo systemctl restart tienda
+
+Seguridad y producción
+
+Estrategia de migración: migrate: safe
+
+Configuración de orígenes WebSocket en producción
+
+Proxy inverso con Nginx
+
+Servicio persistente con systemd
+
+## Estado del proyecto
+
+✔ Aplicación funcional
+✔ Despliegue en producción
+✔ Acceso público
+✔ CRUD completo
+✔ Gestión de usuarios y carrito
+
+## Autor
+
+Alejandro
+Proyecto académico para Desarrollo Web en Entorno Servidor — Desarrollo de Aplicaciones Web (DAW)
